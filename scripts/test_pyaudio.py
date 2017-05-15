@@ -18,7 +18,7 @@ swidth = 2
 Max_Seconds = 10
 TimeoutSignal = ((RATE / chunk * Max_Seconds) + 2)
 silence = True
-FileNameTmp = '/home/aaf/Software/Dev/heyrob/12-33.wav'
+FileNameTmp = '12-33.wav'
 Time = 0
 all = []
 
