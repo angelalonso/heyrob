@@ -2,36 +2,16 @@
 
 import alsaaudio
 import audioop
-import pyglet
 import time
 
-
-from wave import open as waveOpen
-from ossaudiodev import open as ossOpen
+from subprocess import call
 
 THRESHOLD = 600
 CHECKTIME = .01
 
 
 def confirmation():
-    # also sample from http://www.noiseaddicts.com/free-samples-mp3/?id=3739
-    s = waveOpen('listening.wav','rb')
-    (nc,sw,fr,nf,comptype, compname) = s.getparams( )
-    dsp = ossOpen('/dev/dsp','w')
-    try:
-      from ossaudiodev import AFMT_S16_NE
-    except ImportError:
-      from sys import byteorder
-      if byteorder == "little":
-        AFMT_S16_NE = ossaudiodev.AFMT_S16_LE
-      else:
-        AFMT_S16_NE = ossaudiodev.AFMT_S16_BE
-    dsp.setparameters(AFMT_S16_NE, nc, fr)
-    data = s.readframes(nf)
-    s.close()
-    dsp.write(data)
-    dsp.close()
-
+    call(["play","listening.wav"])
 
 input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
 
