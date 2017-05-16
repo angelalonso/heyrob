@@ -13,6 +13,7 @@ CHECKTIME = .01
 
 def confirmation():
     call(["play", "../audio/listening.wav"])
+    call(["arecord", "-D plughw:1,0 -d 3 sample.wav"])
     time.sleep(3)
 
 audio_input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
