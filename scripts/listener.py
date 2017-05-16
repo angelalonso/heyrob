@@ -27,12 +27,11 @@ while True:
     # Read data from device
     l, data = audio_input.read()
     if l:
-        # maximum of the absolute value of all samples in a fragment.
-        sound = audioop.max(data, 2)
-        if sound > THRESHOLD:
-            print "Sound is going on"
-            confirmation()
-        else:
-            print "-"
+        if l > 0:
+            # maximum of the absolute value of all samples in a fragment.
+            sound = audioop.max(data, 2)
+            if sound > THRESHOLD:
+                print "Sound is going on"
+                confirmation()
 
     time.sleep(CHECKTIME)
