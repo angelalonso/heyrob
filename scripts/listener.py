@@ -16,7 +16,7 @@ def confirmation():
 input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
 
 input.setchannels(1)
-input.setrate(16000)
+input.setrate(8000)
 input.setformat(alsaaudio.PCM_FORMAT_S16_LE)
 
 input.setperiodsize(160)
