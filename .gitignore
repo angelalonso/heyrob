@@ -1,2 +1,3 @@
 wit_ai/.credentials
-gspeech/.credentials
+*/.credentials
+*.swp
