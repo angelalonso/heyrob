@@ -13,12 +13,14 @@ CHECKTIME = .01
 AUDIORATE = 16000
 CHANNELS = 1
 
+# TODO: Probably set these as variables we pass on
 KEYWORDFILE = "tmpkeyword.wav"
 FLACFILE = "tmp.flac"
 
 
 def wake_confirm():
     '''Plays confirmation that a sound has been identified'''
+    # TODO: Play with alsaaudio instead of a call
     call(["play", "../audio/listening.wav"])
 
 
@@ -46,6 +48,7 @@ def standby_listen():
 
 def keyword_listen():
     '''Records the keyword, for further recognition'''
+    # TODO: record with alsaaudio instead of an external call
     cmd = "arecord -D plughw:1,0 -d 3 -r " + str(AUDIORATE) + " " + KEYWORDFILE
     subprocess.Popen([cmd], shell=True).communicate()
     return True
@@ -53,14 +56,19 @@ def keyword_listen():
 
 def confirmation():
     '''Plays confirmation that a sound has been identified'''
+    # TODO: make this function useful with a quick sound meaning that the recording went well or that the word has been recognized
     call(["play", "../audio/listening.wav"])
 
+
 def load_key():
+    '''Loads the Google API key from the .credentials file
+    PLEASE, MAKE SURE YOU HAVE IT READY!'''
     KEYFILE = ".credentials"
     key = ""
     with open(KEYFILE, 'r') as f:
         key = f.readline().strip()
     return key
+
 
 def speechtotext():
     gapikey = load_key()
@@ -70,30 +78,12 @@ def speechtotext():
     subprocess.Popen([cmd_transform], shell=True).communicate()
     subprocess.Popen([cmd_curl], shell=True).communicate()
 
-def original():
-
-    audio_input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
-
-    audio_input.setchannels(1)
-    audio_input.setrate(8000)
-    audio_input.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-
-    audio_input.setperiodsize(160)
-
-    while True:
-        # Read data from device
-        l, data = audio_input.read()
-        if l:
-            if l > 0:
-                # maximum of the absolute value of all samples in a fragment.
-                sound = audioop.max(data, 2)
-                if sound > THRESHOLD:
-                    print "Sound is going on"
-                    confirmation()
-
-        time.sleep(CHECKTIME)
 
 while True:
+    # TODO: change the names (triggered, trig2...not that easy to understand)
+    # TODO: streamline the recognition process (first keyword, confirm, then action, confirm...)
+    #       PROBABLY we need no signal that it is listening for the keyword, just after it has been recognized
+    # TODO: Debug mode
     triggered = standby_listen()
     if triggered:
         wake_confirm()
