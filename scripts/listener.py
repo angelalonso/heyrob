@@ -14,6 +14,7 @@ AUDIORATE = 8000
 CHANNELS = 1
 
 KEYWORDFILE = "tmpkeyword.wav"
+FLACFILE = "tmp.flac"
 
 
 def wake_confirm():
@@ -55,10 +56,17 @@ def confirmation():
     '''Plays confirmation that a sound has been identified'''
     call(["play", "../audio/listening.wav"])
 
+def load_key():
+    KEYFILE = ".credentials"
+    key = ""
+    with open(KEYFILE, 'r') as f:
+        key = f.readline()
+    return key
 
 def speechtotext():
-    cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 -o test.flac"
-    cmd_curl = "curl -X POST --data-binary @/dev/shm/out.flac --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key='"
+    gapikey = load_key()
+    cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 -o " + FLACFILE
+    cmd_curl = "curl -X POST --data-binary @" + FLACFILE + " --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=" + gapikey + "'"
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
     time.sleep(1)
@@ -91,7 +99,7 @@ def original():
 while True:
     triggered = standby_listen()
     if triggered:
-        confirmation()
+        wake_confirm()
         print "HEY"
         trig2 = keyword_listen()
         if trig2:
