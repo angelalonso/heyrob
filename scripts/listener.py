@@ -36,14 +36,34 @@ def standby_listen():
                 signal = audioop.max(data, 2)
                 if signal > THRESHOLD:
                     print "Sound is going on"
-                    return true
+                    return 'true'
+        time.sleep(CHECKTIME)
+
+
+def keyword_listen():
+    '''Constantly listens for higher volumes on the input'''
+    standby_input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
+    standby_input.setchannels(CHANNELS)
+    standby_input.setrate(AUDIORATE)
+    standby_input.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+    standby_input.setperiodsize(160)
+
+    while True:
+        # Read data from device
+        l, data = standby_input.read()
+        if l:
+            if l > 0:
+                # maximum of the absolute value of all samples in a fragment.
+                signal = audioop.max(data, 2)
+                if signal > THRESHOLD:
+                    print "Sound is going on"
+                    return 'true'
         time.sleep(CHECKTIME)
 
 
 def confirmation():
     '''Plays confirmation that a sound has been identified'''
     call(["play", "../audio/listening.wav"])
-    time.sleep(3)
 
 def original():
 
@@ -72,4 +92,8 @@ triggered = standby_listen()
 if triggered:
     confirmation()
     print "HEY"
+    trig2 = keyword_listen()
+    if trig2:
+        confirmation()
+        print "HEY 2"
 
