@@ -20,7 +20,6 @@ FLACFILE = "tmp.flac"
 def wake_confirm():
     '''Plays confirmation that a sound has been identified'''
     call(["play", "../audio/listening.wav"])
-    time.sleep(3)
 
 
 def standby_listen():
@@ -69,9 +68,7 @@ def speechtotext():
     cmd_curl = "curl -X POST --data-binary @" + FLACFILE + " --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=" + gapikey + "'"
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
-    time.sleep(1)
     subprocess.Popen([cmd_curl], shell=True).communicate()
-    time.sleep(10)
 
 def original():
 
