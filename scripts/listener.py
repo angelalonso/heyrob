@@ -42,23 +42,7 @@ def standby_listen():
 
 def keyword_listen():
     '''Constantly listens for higher volumes on the input'''
-    standby_input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NONBLOCK)
-    standby_input.setchannels(CHANNELS)
-    standby_input.setrate(AUDIORATE)
-    standby_input.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    standby_input.setperiodsize(160)
-
-    while True:
-        # Read data from device
-        l, data = standby_input.read()
-        if l:
-            if l > 0:
-                # maximum of the absolute value of all samples in a fragment.
-                signal = audioop.max(data, 2)
-                if signal > THRESHOLD:
-                    print "Sound is going on"
-                    return 'true'
-        time.sleep(CHECKTIME)
+    call(["arecord", "-D plughw:1,0 -d 3 sample.wav"])
 
 
 def confirmation():
