@@ -59,7 +59,7 @@ def load_key():
     KEYFILE = ".credentials"
     key = ""
     with open(KEYFILE, 'r') as f:
-        key = f.readline()
+        key = f.readline().strip()
     return key
 
 def speechtotext():
