@@ -46,7 +46,7 @@ def standby_listen():
 
 def keyword_listen():
     '''Records the keyword, for further recognition'''
-    cmd = "arecord -D plughw:1,0 -d 3 -r " + AUDIORATE + " " + KEYWORDFILE
+    cmd = "arecord -D plughw:1,0 -d 3 -r " + str(AUDIORATE) + " " + KEYWORDFILE
     subprocess.Popen([cmd], shell=True).communicate()
     return True
 
