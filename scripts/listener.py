@@ -29,7 +29,7 @@ def standby_listen():
 
     while True:
         # Read data from device
-        l, data = audio_input.read()
+        l, data = standby_input.read()
         if l:
             if l > 0:
                 # maximum of the absolute value of all samples in a fragment.
@@ -70,5 +70,6 @@ def original():
 
 triggered = standby_listen()
 if triggered:
+    confirmation()
     print "HEY"
 
