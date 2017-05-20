@@ -1,11 +1,17 @@
 #!/usr/bin/env python
-
+''' This script listens for a higher volume recorded,
+then waits for a keyword
+then passes that to google speech
+if ok, listens for the action
+then passes that, too, to google speech
+and finally triggers actions
+'''
 from subprocess import call
 
+import subprocess
 import time
 import audioop
 import alsaaudio
-import subprocess
 
 
 THRESHOLD = 900
@@ -56,7 +62,8 @@ def keyword_listen():
 
 def confirmation():
     '''Plays confirmation that a sound has been identified'''
-    # TODO: make this function useful with a quick sound meaning that the recording went well or that the word has been recognized
+    # TODO: make this function useful with a quick sound meaning that the
+    #       recording went well or that the word has been recognized
     call(["play", "../audio/listening.wav"])
 
 
@@ -72,8 +79,15 @@ def load_key():
 
 def speechtotext():
     gapikey = load_key()
-    cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 -o " + FLACFILE
-    cmd_curl = "curl -X POST --data-binary @" + FLACFILE + " --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=" + gapikey + "'"
+    cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 \
+                     -o " + FLACFILE
+    cmd_curl = "curl -X POST --data-binary @" + FLACFILE + " \
+                --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) \
+                AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 \
+                Safari/535.7' \
+                --header 'Content-Type: audio/x-flac; rate=16000;' \
+                'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key="\
+                + gapikey + "'"
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
     subprocess.Popen([cmd_curl], shell=True).communicate()
@@ -81,8 +95,11 @@ def speechtotext():
 
 while True:
     # TODO: change the names (triggered, trig2...not that easy to understand)
-    # TODO: streamline the recognition process (first keyword, confirm, then action, confirm...)
-    #       PROBABLY we need no signal that it is listening for the keyword, just after it has been recognized
+    # TODO: streamline the recognition process
+    #       (first keyword, confirm, then action, confirm...)
+    #       PROBABLY we need no signal that it is listening for the keyword,
+    #       just after it has been recognized
+
     # TODO: Debug mode
     triggered = standby_listen()
     if triggered:
