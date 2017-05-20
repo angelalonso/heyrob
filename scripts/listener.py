@@ -10,7 +10,7 @@ import subprocess
 
 THRESHOLD = 900
 CHECKTIME = .01
-AUDIORATE = 8000
+AUDIORATE = 16000
 CHANNELS = 1
 
 KEYWORDFILE = "tmpkeyword.wav"
