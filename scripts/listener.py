@@ -5,12 +5,15 @@ from subprocess import call
 import time
 import audioop
 import alsaaudio
+import subprocess
 
 
 THRESHOLD = 900
 CHECKTIME = .01
 AUDIORATE = 8000
 CHANNELS = 1
+
+KEYWORDFILE = "tmpkeyword.wav"
 
 
 def wake_confirm():
@@ -36,13 +39,15 @@ def standby_listen():
                 signal = audioop.max(data, 2)
                 if signal > THRESHOLD:
                     print "Sound is going on"
-                    return 'true'
+                    return True
         time.sleep(CHECKTIME)
 
 
 def keyword_listen():
-    '''Constantly listens for higher volumes on the input'''
-    call(["arecord", "-D plughw:1,0 -d 3 sample.wav"])
+    '''Records the keyword, for further recognition'''
+    cmd = "arecord -D plughw:1,0 -d 3 " + KEYWORDFILE
+    subprocess.Popen([cmd], shell=True).communicate()
+    return True
 
 
 def confirmation():
@@ -72,12 +77,13 @@ def original():
 
         time.sleep(CHECKTIME)
 
-triggered = standby_listen()
-if triggered:
-    confirmation()
-    print "HEY"
-    trig2 = keyword_listen()
-    if trig2:
+while True:
+    triggered = standby_listen()
+    if triggered:
         confirmation()
-        print "HEY 2"
+        print "HEY"
+        trig2 = keyword_listen()
+        if trig2:
+            confirmation()
+            print "HEY 2"
 
