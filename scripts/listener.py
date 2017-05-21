@@ -5,6 +5,9 @@ then passes that to google speech
 if ok, listens for the action
 then passes that, too, to google speech
 and finally triggers actions
+
+THANKS FOR THE INFO TO:
+https://codeabitwiser.com/2014/09/python-google-speech-api/
 '''
 from subprocess import call
 
@@ -13,7 +16,6 @@ import time
 import audioop
 import alsaaudio
 import json
-
 import urllib2
 
 THRESHOLD = 900
@@ -71,6 +73,28 @@ def load_key():
     return key
 
 
+def stringjson_to_list(input_raw):
+    json_txt = input_raw.split('\n')[1]
+    decoder = json.JSONDecoder()
+    json_txt_len = len(json_txt)
+
+    objs = []
+    end = 0
+    while end != json_txt_len:
+        obj, end = decoder.raw_decode(json_txt, idx=end)
+        objs.append(obj)
+
+    found_list = []
+    try:
+        for item in objs[0]['result'][0]['alternative']:
+            found_list.append(item['transcript'])
+        return found_list
+    except IndexError:
+        return "Index NO RESULTS -> " + str(objs)
+    except KeyError:
+        return "Key NO RESULTS -> " + str(objs)
+
+
 def speechtotext():
     '''Transforms the recorded WAV into FLAC, then sends it to Google Speech
        , and returns the raw JSON-formatted result'''
@@ -80,19 +104,17 @@ def speechtotext():
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
 
-    url = 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=' \
-    + gapikey 
-    audio = open(FLACFILE,'rb').read()
-    headers = {'Content-Type': 'audio/x-flac; rate=16000', 'User-Agent':'Mozilla/5.0'}
+    url = 'https://www.google.com/speech-api/v2/recognize?output=json&' \
+          + 'lang=en-us&key=' + gapikey
+    audio = open(FLACFILE, 'rb').read()
+    headers = {'Content-Type': 'audio/x-flac; rate=16000',
+               'User-Agent': 'Mozilla/5.0'}
     request = urllib2.Request(url, data=audio, headers=headers)
     ret = urllib2.urlopen(request)
     responses = []
     responses = ret.read()
-    curl_result_raw = json.loads(json.dumps(responses))
-    
-    print curl_result_raw
-    
 
+    return responses
 
 
 while True:
@@ -107,4 +129,4 @@ while True:
         keyword_in = keyword_listen()
         if keyword_in:
             confirmation()
-            speechtotext()
+            print(stringjson_to_list(speechtotext()))
