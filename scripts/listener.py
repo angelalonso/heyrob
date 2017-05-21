@@ -62,14 +62,16 @@ def confirmation():
 def load_key():
     '''Loads the Google API key from the .credentials file
     PLEASE, MAKE SURE YOU HAVE IT READY!'''
-    KEYFILE = ".credentials"
+    keyfile = ".credentials"
     key = ""
-    with open(KEYFILE, 'r') as f:
-        key = f.readline().strip()
+    with open(keyfile, 'r') as filebuffer:
+        key = filebuffer.readline().strip()
     return key
 
 
 def speechtotext():
+    '''Transforms the recorded WAV into FLAC, then sends it to Google Speech
+       , and returns the raw JSON-formatted result'''
     gapikey = load_key()
     cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 \
                      -o " + FLACFILE
@@ -82,7 +84,10 @@ def speechtotext():
                 + gapikey + "'"
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
-    subprocess.Popen([cmd_curl], shell=True).communicate()
+    curl_call = subprocess.Popen([cmd_curl], shell=True,
+                                 stdout=subprocess.PIPE)
+    curl_result_raw = curl_call.stdout.read()
+    return curl_result_raw
 
 
 while True:
@@ -97,5 +102,5 @@ while True:
         keyword_in = keyword_listen()
         if keyword_in:
             confirmation()
-            speechtotext()
+            speech_json = speechtotext()
             print "HEY 2"
