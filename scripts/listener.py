@@ -24,13 +24,7 @@ KEYWORDFILE = "tmpkeyword.wav"
 FLACFILE = "tmp.flac"
 
 
-def wake_confirm():
-    '''Plays confirmation that a sound has been identified'''
-    # TODO: Play with alsaaudio instead of a call
-    call(["play", "../audio/listening.wav"])
-
-
-def standby_listen():
+def noise_listen():
     '''Constantly listens for higher volumes on the input'''
     standby_input = alsaaudio.PCM(alsaaudio.PCM_CAPTURE,
                                   alsaaudio.PCM_NONBLOCK)
@@ -62,9 +56,7 @@ def keyword_listen():
 
 def confirmation():
     '''Plays confirmation that a sound has been identified'''
-    # TODO: make this function useful with a quick sound meaning that the
-    #       recording went well or that the word has been recognized
-    call(["play", "../audio/listening.wav"])
+    call(["play", "../audio/beep.wav"])
 
 
 def load_key():
@@ -94,19 +86,16 @@ def speechtotext():
 
 
 while True:
-    # TODO: change the names (triggered, trig2...not that easy to understand)
     # TODO: streamline the recognition process
     #       (first keyword, confirm, then action, confirm...)
     #       PROBABLY we need no signal that it is listening for the keyword,
     #       just after it has been recognized
 
     # TODO: Debug mode
-    triggered = standby_listen()
-    if triggered:
-        wake_confirm()
-        print "HEY"
-        trig2 = keyword_listen()
-        if trig2:
+    noise_in = noise_listen()
+    if noise_in:
+        keyword_in = keyword_listen()
+        if keyword_in:
             confirmation()
             speechtotext()
             print "HEY 2"
