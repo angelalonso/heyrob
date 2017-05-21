@@ -12,10 +12,12 @@ import subprocess
 import time
 import audioop
 import alsaaudio
+import json
 
+import urllib2
 
 THRESHOLD = 900
-CHECKTIME = .01
+CHECKTIME = .001
 AUDIORATE = 16000
 CHANNELS = 1
 
@@ -49,7 +51,7 @@ def noise_listen():
 def keyword_listen():
     '''Records the keyword, for further recognition'''
     # TODO: record with alsaaudio instead of an external call
-    cmd = "arecord -D plughw:1,0 -d 3 -r " + str(AUDIORATE) + " " + KEYWORDFILE
+    cmd = "arecord -D plughw:1,0 -d 2 -r " + str(AUDIORATE) + " " + KEYWORDFILE
     subprocess.Popen([cmd], shell=True).communicate()
     return True
 
@@ -75,19 +77,22 @@ def speechtotext():
     gapikey = load_key()
     cmd_transform = "flac " + KEYWORDFILE + " -f --best --sample-rate 16000 \
                      -o " + FLACFILE
-    cmd_curl = "curl -X POST --data-binary @" + FLACFILE + " \
-                --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) \
-                AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 \
-                Safari/535.7' \
-                --header 'Content-Type: audio/x-flac; rate=16000;' \
-                'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key="\
-                + gapikey + "'"
 
     subprocess.Popen([cmd_transform], shell=True).communicate()
-    curl_call = subprocess.Popen([cmd_curl], shell=True,
-                                 stdout=subprocess.PIPE)
-    curl_result_raw = curl_call.stdout.read()
-    return curl_result_raw
+
+    url = 'https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=' \
+    + gapikey 
+    audio = open(FLACFILE,'rb').read()
+    headers = {'Content-Type': 'audio/x-flac; rate=16000', 'User-Agent':'Mozilla/5.0'}
+    request = urllib2.Request(url, data=audio, headers=headers)
+    ret = urllib2.urlopen(request)
+    responses = []
+    responses = ret.read()
+    curl_result_raw = json.loads(json.dumps(responses))
+    
+    print curl_result_raw
+    
+
 
 
 while True:
@@ -102,5 +107,4 @@ while True:
         keyword_in = keyword_listen()
         if keyword_in:
             confirmation()
-            speech_json = speechtotext()
-            print "HEY 2"
+            speechtotext()
