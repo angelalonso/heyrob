@@ -10,7 +10,7 @@ nginx + config file
 
 # playing with formats
 
-
+ ATTENTION: takes ~1h
 http://www.jeffreythompson.org/blog/2014/11/13/installing-ffmpeg-for-raspberry-pi/
 cd /usr/src
 git clone git://git.videolan.org/x264
@@ -18,6 +18,8 @@ cd x264
 ./configure --host=arm-unknown-linux-gnueabi --enable-static --disable-opencl
 make
 sudo make install
+
+ ATTENTION: takes almost 5h!
 
 cd /usr/src
 git clone https://github.com/FFmpeg/FFmpeg.git
