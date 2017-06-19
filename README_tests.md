@@ -8,6 +8,9 @@ pip3 install watchdog
 php
 nginx + config file
 
+# Python JS server
+pip3 install websockets gevent
+
 # playing with formats
 
  ATTENTION: takes ~1h
