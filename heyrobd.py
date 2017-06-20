@@ -4,6 +4,7 @@ import sys
 import time
 import logging
 import subprocess
+import understand
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
@@ -14,7 +15,7 @@ class MyHandler(PatternMatchingEventHandler):
         process_voice()
 
     def on_modified(self, event):
-        print("new command detected at " + event.src_path)
+        print("...")
         self.process(event)
 
     def on_created(self, event):
@@ -31,14 +32,9 @@ class MyHandler(PatternMatchingEventHandler):
 
 def process_voice():
     cmd = './stt.sh'
-    child = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
-    while True:
-        out = child.stderr.read(1)
-        if out == '' and child.poll() != None:
-            break
-        if out != '':
-            sys.stdout.write(out)
-            sys.stdout.flush()
+    child = subprocess.Popen(cmd, shell=True, stderr=open('/dev/null', 'w'), stdout=subprocess.PIPE, universal_newlines=True)
+    out = child.communicate()
+    print(str(understand.actions(out)))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
