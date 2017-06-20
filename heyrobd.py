@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+
 import sys
 import time
 import logging
+import subprocess
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
@@ -8,10 +11,10 @@ from watchdog.events import PatternMatchingEventHandler
 class MyHandler(PatternMatchingEventHandler):
 
     def process(self, event):
-        print("I am being processed")
+        process_voice()
 
     def on_modified(self, event):
-        print("file modified " + event.src_path)
+        print("new command detected at " + event.src_path)
         self.process(event)
 
     def on_created(self, event):
@@ -26,14 +29,22 @@ class MyHandler(PatternMatchingEventHandler):
         print("file deleted" + event.src_path)
         self.process(event)
 
-def test_out():
-    print("Hell, yeah")
+def process_voice():
+    cmd = './stt.sh'
+    child = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+    while True:
+        out = child.stderr.read(1)
+        if out == '' and child.poll() != None:
+            break
+        if out != '':
+            sys.stdout.write(out)
+            sys.stdout.flush()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = "/home/pi/voice_in_web/recordings"
+    path = "./web/recordings"
     #event_handler = LoggingEventHandler()
     event_handler = MyHandler()
     observer = Observer()
