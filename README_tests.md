@@ -1,7 +1,12 @@
-# filetest.py
+# heyrobd.py
 
 apt install python3-pip
 pip3 install watchdog
+
+also add into /etc/rc.local :
+mv /home/pi/heyrob/heyrobd.log.0 /home/pi/heyrob/heyrobd.log.1 2>/dev/null
+mv /home/pi/heyrob/heyrobd.log /home/pi/heyrob/heyrobd.log.0 2>/dev/null
+/usr/bin/python /home/pi/heyrob/heyrobd.py > /home/pi/heyrob/heyrobd.log
 
 # voice_in_web
 
@@ -30,3 +35,6 @@ cd ffmpeg
 sudo ./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree
 make
 sudo make install
+
+# Bluetooth speaker
+apt install pulseaudio-module-bluetooth expect

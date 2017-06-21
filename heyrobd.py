@@ -9,6 +9,8 @@ from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
 
+PATH = "/home/pi/heyrob"
+
 class MyHandler(PatternMatchingEventHandler):
 
     def process(self, event):
@@ -31,7 +33,7 @@ class MyHandler(PatternMatchingEventHandler):
         self.process(event)
 
 def process_voice():
-    cmd = './stt.sh'
+    cmd = PATH + '/stt.sh'
     child = subprocess.Popen(cmd, shell=True, stderr=open('/dev/null', 'w'), stdout=subprocess.PIPE, universal_newlines=True)
     out = child.communicate()
     print(str(understand.actions(out)))
@@ -40,7 +42,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = "./web/recordings"
+    path = PATH + "/web/recordings"
     #event_handler = LoggingEventHandler()
     event_handler = MyHandler()
     observer = Observer()
