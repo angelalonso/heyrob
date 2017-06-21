@@ -36,7 +36,7 @@ def process_voice():
     cmd = PATH + '/stt.sh'
     child = subprocess.Popen(cmd, shell=True, stderr=open('/dev/null', 'w'), stdout=subprocess.PIPE, universal_newlines=True)
     out = child.communicate()
-    print(str(understand.actions(out)))
+    print(str(understand.go(out)))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,

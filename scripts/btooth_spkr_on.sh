@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 DONGLE="00:80:5A:20:3A:06"
-KB="A0:E9:DB:0B:01:8C"
+SPKR="A0:E9:DB:0B:01:8C"
 
 # Check that the dongle is ON
 declare -a devicelist
@@ -14,10 +14,10 @@ if [[ "${devicelist[@]}" =~ "${DONGLE}" ]]; then
   # Check that the speaker is Available
   readarray -n 10 -O 0 -t addrlist < <(hcitool scan|grep -v "^Scanning"|sed -e "s/^[ \t]//g" -e "s/\t/ /g" | head -n 9) 2>/dev/null
 
-  if [[ "${addrlist[@]}" =~ "${KB}" ]]; then
+  if [[ "${addrlist[@]}" =~ "${SPKR}" ]]; then
     echo "FOUND"
+  #set timeout 5
 expect <<- DONE
-  set timeout 5
   spawn bluetoothctl
   match_max 1000
   expect  "]#"
