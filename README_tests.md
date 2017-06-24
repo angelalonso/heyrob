@@ -15,7 +15,7 @@ mv /home/pi/heyrob/heyrobd.log /home/pi/heyrob/heyrobd.log.0 2>/dev/null
 
 # voice_in_web
 
-apt install php (comes with apache in debian)
+apt install php (comes with apache in debian unless php5-cgi is installed ->https://justinnewman.com/HOWTO/php-without-Apache)
 apache or nginx + config file (only need to change the root folder)
 
 # Python JS server
