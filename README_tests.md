@@ -1,17 +1,22 @@
 # heyrobd.py
 
-apt install python3-pip
-pip3 install watchdog
+USE ALWAYS PYTHON3!
 
-also add into /etc/rc.local :
+apt install python3-pip libasound2-dev
+pip3 install watchdog pyalsaaudio
+
+Tried but did not work:
+```also add into /etc/rc.local :
 mv /home/pi/heyrob/heyrobd.log.0 /home/pi/heyrob/heyrobd.log.1 2>/dev/null
 mv /home/pi/heyrob/heyrobd.log /home/pi/heyrob/heyrobd.log.0 2>/dev/null
 /usr/bin/python /home/pi/heyrob/heyrobd.py > /home/pi/heyrob/heyrobd.log
+```
+
 
 # voice_in_web
 
-php
-nginx + config file
+apt install php (comes with apache in debian)
+apache or nginx + config file (only need to change the root folder)
 
 # Python JS server
 pip3 install websockets gevent
@@ -38,3 +43,12 @@ sudo make install
 
 # Bluetooth speaker
 apt install pulseaudio-module-bluetooth expect
+
+# ERRORS
+'''ERROR
+<html lang=en>'''
+- Happens when running from a cronjob
+- Also when nothing is being recorded
+- Also on fresh install running python3
+- Problem seems with watchdog (alternative?)
+
