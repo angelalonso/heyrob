@@ -1,12 +1,13 @@
 #!/bin/bash
 
-KEY=$(cat scripts/.credentials)
-SNDFILE="test.wav"
-SND2="test.flac"
+THISPATH="/home/pi/heyrob"
+KEY=$(cat $THISPATH/scripts/.credentials)
+SNDFILE="$THISPATH/test.wav"
+SND2="$THISPATH/test.flac"
 
 
 
-cp ./web/recordings/voice.wav $SNDFILE
+cp $THISPATH/web/recordings/voice.wav $SNDFILE
 rm output.pcm 2>/dev/null
 rm $SND2 2>/dev/null
 ffmpeg -i $SNDFILE -ar 16k $SND2 -loglevel quiet
