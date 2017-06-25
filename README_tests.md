@@ -41,6 +41,21 @@ sudo ./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --
 make
 sudo make install
 
+## On regularx4 laptop with Debian testing
+sudo apt-get install yasm nasm \
+                build-essential automake autoconf \
+                libtool pkg-config libcurl4-openssl-dev \
+                intltool libxml2-dev libgtk2.0-dev \
+                libnotify-dev libglib2.0-dev libevent-dev \
+                checkinstall
+git clone git://git.videolan.org/ffmpeg.git
+cd ffmpeg
+./configure --prefix=/usr
+time make -j 8
+cat RELEASE
+sudo mkdir -p /usr/share/ffmpeg
+sudo checkinstall
+
 # Bluetooth speaker
 apt install pulseaudio-module-bluetooth expect
 
@@ -50,5 +65,6 @@ apt install pulseaudio-module-bluetooth expect
 - Happens when running from a cronjob
 - Also when nothing is being recorded
 - Also on fresh install running python3
-- Problem seems with watchdog (alternative?)
+- Problem seems with watchdog
+  - Not the case, polling gives same error
 
