@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
+''' heyrobd.py
+Main program that controls the robot
+'''
 
 import os
-import sys
 import time
 import logging
 import subprocess
-import understand
+import inspect
+
 from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
 
-# TODO: flexible path definition here
-PATH = "/home/aaf/Software/Dev/heyrob"
-# TODO: avoid using watchdog -> https://stackoverflow.com/questions/182197/how-do-i-watch-a-file-for-changes POLLING!
+import understand
+
+PATH = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
+
+
 class WatchdogMyHandler(PatternMatchingEventHandler):
 
     def process(self, event):
@@ -34,7 +38,12 @@ class WatchdogMyHandler(PatternMatchingEventHandler):
         print("file deleted" + event.src_path)
         self.process(event)
 
+
 class FilePolling(object):
+    '''
+    https://stackoverflow.com/questions/182197/how-do-i-watch-a-file-for-changes
+
+    '''
     def __init__(self, pathtofile):
         self._cached_stamp = 0
         self.filename = pathtofile
@@ -46,11 +55,14 @@ class FilePolling(object):
             self._cached_stamp = stamp
             process_voice()
 
+
 def process_voice():
-    cmd = PATH + '/stt.sh'
-    child = subprocess.Popen(cmd, shell=True, stderr=open('/dev/null', 'w'), stdout=subprocess.PIPE, universal_newlines=True)
+    # PATH at the end is needed for the script to know the main path
+    cmd = PATH + '/stt.sh ' + PATH
+    child = subprocess.Popen(cmd, shell=True, stderr=open('/dev/null', 'w'),
+                             stdout=subprocess.PIPE, universal_newlines=True)
     out = child.communicate()
-    print(str(understand.go(out)))
+    print(str(understand.go(out, PATH)))
 
 # if __name__ == "__main__":
 #     logging.basicConfig(level=logging.INFO,
@@ -66,12 +78,14 @@ def process_voice():
 #             print('\nDone')
 #             break
 
+
 if __name__ == "__main__":
+    print(PATH)
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
     path = PATH + "/web/recordings"
-    #event_handler = LoggingEventHandler()
+    # event_handler = LoggingEventHandler()
     event_handler = WatchdogMyHandler()
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)

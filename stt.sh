@@ -1,6 +1,7 @@
 #!/bin/bash
 
-THISPATH="/home/pi/heyrob"
+THISPATH=$1
+
 KEY=$(cat $THISPATH/scripts/.credentials)
 SNDFILE="$THISPATH/test.wav"
 SND2="$THISPATH/test.flac"

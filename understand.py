@@ -7,9 +7,6 @@ import takeaction
 import json
 import logging
 
-# TODO: avoid the need for this
-PATH = "/home/aaf/Software/Dev/heyrob"
-
 
 def prepare_input(in_tuple):
     '''
@@ -48,11 +45,16 @@ def prepare_input(in_tuple):
         return "Key NO RESULTS -> " + str(objs)
 
 
-def go(in_tuple):
+def go(in_tuple, PATH):
+    '''
+    Control the understanding process
+    '''
     log = setup_logging()
 
     understood = str(prepare_input(in_tuple))
-    takeaction.action_write(understood)
+    log.debug('understood - ' + understood)
+    # Here, PATH is needed to run actions from a cronjob as well
+    takeaction.action_write(understood, PATH)
 
     return understood
 
@@ -63,7 +65,7 @@ def setup_logging():
     '''
     Setup the Logging for this library only
     '''
-    logger = logging.getLogger('takeaction_logger')
+    logger = logging.getLogger('understand_logger')
     logger.setLevel(logging.DEBUG)
     fh = logging.FileHandler('log.understand.log')
     fh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s \

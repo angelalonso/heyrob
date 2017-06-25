@@ -6,14 +6,17 @@ This script executes actions, calling scripts and stuff
 import datetime
 import logging
 
-# TODO: avoid the need for this
-PATH = "/home/aaf/Software/Dev/heyrob"
+import os
+import inspect
 
+PATH2 = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
 
-def action_write(text_in):
+def action_write(text_in, PATH):
     '''
     Write tet to a file
     '''
+    print(PATH)
+    print(PATH2)
     log = setup_logging()
 
     log.debug('opening file')
