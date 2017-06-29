@@ -1,4 +1,7 @@
 #!/bin/bash
+#TODO: if THISPATH is empty: pwd
+#TODO: output mock result if no internet
+#TODO: improve exit status for the script calling this know handle errors
 
 THISPATH=$1
 
