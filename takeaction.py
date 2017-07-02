@@ -6,24 +6,21 @@ This script executes actions, calling scripts and stuff
 import datetime
 import logging
 
-import os
-import inspect
-
-PATH2 = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
 
 def action_write(text_in, PATH):
     '''
     Write tet to a file
     '''
-    print(PATH)
-    print(PATH2)
     log = setup_logging()
 
     log.debug('opening file')
     outputfile = open(PATH + "/result.txt", "a")
+
     log.debug('writing the following: ' + str(datetime.datetime.now())
               + " - " + text_in)
     outputfile.write(str(datetime.datetime.now()) + " - " + text_in + "\n")
+
+    log.debug('closing file')
     outputfile.close()
 
 
