@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Script to encode audio and send it to GSpeech
+# TODO: get rid of this and use python instead
 
 # The path might be passed as a parameter
 THISPATH=$1
